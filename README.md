@@ -1,4 +1,4 @@
-#底辺ライブラリ(Teihen Lirary)
+#底辺ライブラリ(Teihen Library)
 
 ## これは何?
 競技プログラミングで使ってるライブラリ(Java)です.
