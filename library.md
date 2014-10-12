@@ -1182,7 +1182,7 @@ public static class Point2D implements Comparable<Point2D>{
 
 ### 依存
 
--   [2次元の点(有理数](./library.html#TwoIntDimPoint)
+-   [2次元の点(有理数)](./library.html#TwoIntDimPoint)
 
 ### Source Code
 

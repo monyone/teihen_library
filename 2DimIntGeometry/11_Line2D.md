@@ -3,7 +3,7 @@
 
 ### 依存
 
--   [2次元の点(有理数 ](.\library.html#TwoIntDimPoint)
+-   [2次元の点(有理数) ](.\library.html#TwoIntDimPoint)
 
 ### Source Code
 
