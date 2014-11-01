@@ -120,6 +120,7 @@ $(function(){
 <li><a href="#EnumInvModP"><span class="toc-section-number">5.3</span> 逆元列挙 (mod p)</a></li>
 <li><a href="#InvModM"><span class="toc-section-number">5.4</span> 逆元 (mod m)</a></li>
 <li><a href="#ChineseRemainder"><span class="toc-section-number">5.5</span> 中国剰余定理</a></li>
+<li><a href="#rollingux5fhash"><span class="toc-section-number">5.6</span> Rolling Hash</a></li>
 </ul></li>
 <li><a href="#dimrealgeometry"><span class="toc-section-number">6</span> 2DimRealGeometry</a><ul>
 <li><a href="#TwoDimBasis"><span class="toc-section-number">6.1</span> 基本データ構造</a></li>
@@ -810,6 +811,24 @@ $(function(){
 }</code></pre>
 <h3 id="verified-1" class="unnumbered">Verified</h3>
 <p>する予定</p>
+<h2 id="rollingux5fhash"><span class="header-section-number">5.6</span> Rolling Hash</h2>
+<p>文字列をハッシュする関数. 部分文字列に対するハッシュを定数時間で行える. 文字列<span class="math"><em>s</em>[0, <em>n</em>)</span> に対して</p>
+<p><span class="math"><em>h</em><em>a</em><em>s</em><em>h</em>(<em>s</em>) = (<em>s</em>[<em>n</em> − 1] + <em>s</em>[<em>n</em> − 2] * <em>b</em> + ... + <em>s</em>[0] * <em>b</em><sup><em>n</em> − 1</sup>) <em>m</em><em>o</em><em>d</em> <em>M</em> (<em>b</em>, <em>M</em><em>は</em><em>互</em><em>い</em><em>に</em><em>素</em>)</span></p>
+<h3 id="ux4f7fux3044ux65b9" class="unnumbered">使い方</h3>
+<h4 id="ux90e8ux5206ux6587ux5b57ux5217ux306eux30cfux30c3ux30b7ux30e5" class="unnumbered">部分文字列のハッシュ</h4>
+<p><span class="math"><em>h</em><em>a</em><em>s</em><em>h</em>(<em>s</em>[<em>l</em>, <em>r</em>)) = <em>h</em><em>a</em><em>s</em><em>h</em>[<em>r</em>] − <em>h</em><em>a</em><em>s</em><em>h</em>[<em>l</em>] * <em>b</em><sup><em>r</em> − <em>l</em></sup></span></p>
+<h3 id="complecity" class="unnumbered">計算量</h3>
+<p><span class="math"><em>O</em>(<em>N</em>)...<em>n</em><em>は</em><em>文</em><em>字</em><em>列</em><em>の</em><em>長</em><em>さ</em></span></p>
+<h3 id="source-code" class="unnumbered">Source Code</h3>
+<pre class="sourceCode java" language="Java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="dt">long</span> <span class="fu">rolling_hash</span>(String s, <span class="dt">final</span> <span class="dt">long</span> b, <span class="dt">final</span> <span class="dt">long</span> m){
+    <span class="dt">long</span> ret = 0l;
+    <span class="kw">for</span>(<span class="dt">char</span> c : s.<span class="fu">toCharArray</span>()){
+        ret *= b; ret %= m;
+        ret += c; ret %= m;
+    }
+    <span class="kw">return</span> ret;
+}</code></pre>
+<h3 id="verified" class="unnumbered">Verified</h3>
 <h1 id="dimrealgeometry"><span class="header-section-number">6</span> 2DimRealGeometry</h1>
 <h2 id="TwoDimBasis"><span class="header-section-number">6.1</span> 基本データ構造</h2>
 <h3 id="source-code" class="unnumbered">Source Code</h3>
