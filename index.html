@@ -565,8 +565,8 @@ $(function(){
 <h3 id="verified" class="unnumbered">Verified</h3>
 <p>TODO</p>
 <h2 id="LasyAddSumSegmentTree"><span class="header-section-number">2.6</span> 遅延評価 SegmentTree (区間加算と総和)</h2>
-<p>SegmentTreeでは区間に対する add に <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mspace width="0.278em"></mspace><mi>l</mi><mi>o</mi><mi>g</mi><mspace width="0.278em"></mspace><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n \; log\; n)</annotation></semantics></math> かかってしまう.<br />
-add のクエリを遅延評価することで 区間add を <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mspace width="0.278em"></mspace><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(log\; n)</annotation></semantics></math> に抑える.</p>
+<p>SegmentTreeでは区間に対する add に O(n log n) かかってしまう.<br />
+add のクエリを遅延評価することで 区間add を O(log n) に抑える.</p>
 <h3 id="complecity" class="unnumbered">計算量</h3>
 <ul>
 <li><p>add(v,s,t): O(log n) ※範囲の値の加算</p></li>
