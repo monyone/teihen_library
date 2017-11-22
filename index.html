@@ -142,6 +142,7 @@ $(function(){
 <li><a href="#MinimumSteinerTree"><span class="toc-section-number">3.7</span> 最小シュタイナー木</a></li>
 <li><a href="#OfflineLCA"><span class="toc-section-number">3.8</span> オフライン最小共通先祖</a></li>
 <li><a href="#MinimumCutStoerWagner"><span class="toc-section-number">3.9</span> 全域最小カット</a></li>
+<li><a href="#MinimumGeneralMatchingDP"><span class="toc-section-number">3.10</span> 最小重み最大マッチング (DP)</a></li>
 </ul></li>
 <li><a href="#math"><span class="toc-section-number">4</span> Math</a><ul>
 <li><a href="#GCDux5fANDux5fLCM"><span class="toc-section-number">4.1</span> GCD, LCM</a></li>
@@ -486,15 +487,6 @@ $(function(){
             ret += dat[i];
         }
         <span class="kw">return</span> ret;
-    }
-    
-    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">get</span>(<span class="dt">int</span> k){ <span class="co">// k : 0-indexed</span>
-        <span class="dt">int</span> p = Integer.<span class="fu">highestOneBit</span>(dat.<span class="fu">length</span> - <span class="dv">1</span>);
-        <span class="kw">for</span>(<span class="dt">int</span> q = p; q &gt; <span class="dv">0</span>; q &gt;&gt;= <span class="dv">1</span>, p |= q){
-            <span class="kw">if</span>( p &gt;= dat.<span class="fu">length</span> || k &lt; dat[p]) p ^= q;
-            <span class="kw">else</span> k -= dat[p];
-        }
-        <span class="kw">return</span> p;
     }
 }</code></pre></div>
 <h3 id="verified" class="unnumbered">Verified</h3>
@@ -1331,6 +1323,41 @@ add のクエリを遅延評価することで 区間add を O(log n) に抑え�
     <span class="kw">return</span> cut;
 }</code></pre></div>
 <h3 id="verified" class="unnumbered">Verified</h3>
+<h2 id="MinimumGeneralMatchingDP"><span class="header-section-number">3.10</span> 最小重み最大マッチング (DP)</h2>
+<p>bitDP で一般のグラフのコスト最小マッチングを求める。<br />
+片側の埋める順序を予め決めとけば、計算量が O(V^2 * V) になる。</p>
+<h3 id="source-code" class="unnumbered">Source Code</h3>
+<div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="dt">long</span> <span class="fu">MinimumGeneralMatching</span>(<span class="dt">long</span>[][] adj){
+    <span class="dt">final</span> <span class="dt">int</span> n = adj.<span class="fu">length</span>;
+
+    <span class="dt">long</span>[] DP = <span class="kw">new</span> <span class="dt">long</span>[<span class="dv">1</span> &lt;&lt; n];
+    <span class="dt">final</span> <span class="dt">int</span> INF = Integer.<span class="fu">MAX_VALUE</span> / <span class="dv">2</span> - <span class="dv">1</span>;
+
+    <span class="kw">for</span>(<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">1</span> &lt;&lt; n; i++){ DP[i] = INF; }
+    DP[<span class="dv">0</span>] = <span class="dv">0</span>;
+
+    <span class="kw">for</span>(<span class="dt">int</span> bit = <span class="dv">0</span>; bit &lt; (<span class="dv">1</span> &lt;&lt; n); bit++){
+        <span class="kw">if</span>(DP[bit] &gt;= INF){ <span class="kw">continue</span>; }
+
+        <span class="co">// 立ってない最初の bit だけ立ててて O(N) ループ節約</span>
+        <span class="dt">int</span> i = <span class="dv">0</span>; <span class="kw">for</span>(; (bit &amp; (<span class="dv">1</span> &lt;&lt; i)) != <span class="dv">0</span>; i++);
+        <span class="dt">final</span> <span class="dt">int</span> fst = <span class="dv">1</span> &lt;&lt; i;
+
+        <span class="kw">for</span>(<span class="dt">int</span> j = i + <span class="dv">1</span>; j &lt; n; j++){
+            <span class="kw">if</span>((bit &amp; (<span class="dv">1</span> &lt;&lt; j)) != <span class="dv">0</span>){ <span class="kw">continue</span>; }
+
+            <span class="dt">final</span> <span class="dt">int</span> snd = <span class="dv">1</span> &lt;&lt; j;
+            <span class="dt">final</span> <span class="dt">int</span> next_bit = bit | fst | snd;
+            DP[next_bit] = Math.<span class="fu">min</span>(DP[next_bit], DP[bit] + adj[i][j]);
+        }
+    }
+
+    <span class="kw">return</span> DP[(<span class="dv">1</span> &lt;&lt; n) - <span class="dv">1</span>];
+}</code></pre></div>
+<h3 id="verified" class="unnumbered">Verified</h3>
+<ul>
+<li><p><a href="https://yukicoder.me/problems/no/519">yukicoder No.519 アイドルユニット</a> <span>[</span><a href="https://yukicoder.me/submissions/215145">提出</a><span>]</span></p></li>
+</ul>
 <h1 id="math"><span class="header-section-number">4</span> Math</h1>
 <h2 id="GCDux5fANDux5fLCM"><span class="header-section-number">4.1</span> GCD, LCM</h2>
 <p>基本的な算術用の関数. いつもお世話になる.</p>
@@ -1520,7 +1547,7 @@ add のクエリを遅延評価することで 区間add を O(log n) に抑え�
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mspace width="0.222em"></mspace><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(log \: p)</annotation></semantics></math> ※累乗にバイナリ法が使える</p>
 <h3 id="ux4f9dux5b58"><span class="header-section-number">5.2.1</span> 依存</h3>
 <ul>
-<li><p><a href="./library-sc.html#BinaryPowerMethodMOD">累乗 (mod m) </a></p></li>
+<li></li>
 </ul>
 <h3 id="source-code" class="unnumbered">Source Code</h3>
 <div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="dt">long</span> <span class="fu">mod_inv</span>(<span class="dt">long</span> a, <span class="dt">long</span> p){
@@ -1561,7 +1588,7 @@ add のクエリを遅延評価することで 区間add を O(log n) に抑え�
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>条</mi><mi>件</mi><mi>の</mi><mi>数</mi><mo>*</mo><mi>l</mi><mi>o</mi><mi>g</mi><mspace width="0.278em"></mspace><mo>∑</mo><mspace width="0.278em"></mspace><msub><mi>m</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(条件の数 * log \; \sum \; m_i)</annotation></semantics></math> ※計算量よりオーバーフローに気をつけること</p>
 <h3 id="dependence" class="unnumbered">依存</h3>
 <ul>
-<li><p><a href="./library-sc.html#InvModM">逆元 (mod m) </a></p></li>
+<li></li>
 </ul>
 <h3 id="source-code" class="unnumbered">Source Code</h3>
 <div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">//Gauss の方法で求める. 返り値の値の mod を取らないので O(N) くらい</span>
@@ -1915,7 +1942,7 @@ add のクエリを遅延評価することで 区間add を O(log n) に抑え�
 <h2 id="TwoIntDimPoint"><span class="header-section-number">7.1</span> 2次元の点</h2>
 <h3 id="dependence" class="unnumbered">依存</h3>
 <ul>
-<li><p><a href="./library-sc.html#Rational">有理数 </a> or <a href="./library-sc.html#BigRational">多倍長有理数 </a></p></li>
+<li><p>or</p></li>
 </ul>
 <h3 id="source-code" class="unnumbered">Source Code</h3>
 <div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="kw">class</span> Point2D <span class="kw">implements</span> Comparable&lt;Point2D&gt;{
@@ -1971,7 +1998,7 @@ add のクエリを遅延評価することで 区間add を O(log n) に抑え�
 <h2 id="TwoIntDimPoint"><span class="header-section-number">7.2</span> 2次元の点</h2>
 <h3 id="dependence" class="unnumbered">依存</h3>
 <ul>
-<li><p><a href="./library-sc.html#Rational">有理数 </a> or <a href="./library-sc.html#BigRational">多倍長有理数 </a></p></li>
+<li><p>or</p></li>
 </ul>
 <h3 id="source-code" class="unnumbered">Source Code</h3>
 <div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="kw">class</span> Point2D <span class="kw">implements</span> Comparable&lt;Point2D&gt;{
